@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CareerAI — AI Career Mentor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="toast" class="toast"></div>
+
+  <section id="authView" class="auth-shell">
+    <div class="auth-brand">
+      <div class="logo-mark">CA</div>
+      <div><strong>CareerAI</strong><span>AI-powered career mentor</span></div>
+    </div>
+    <div class="auth-grid">
+      <div class="hero-copy">
+        <span class="eyebrow">YOUR CAREER. YOUR DATA. YOUR ROADMAP.</span>
+        <h1>Turn your student profile into a <span>career strategy.</span></h1>
+        <p>CareerAI analyzes academics, skills, projects and coding progress to build a personalized roadmap, learning plan, projects, opportunities and weekly actions.</p>
+        <div class="hero-points">
+          <div>✓ AI career readiness analysis</div>
+          <div>✓ Skill-gap & learning recommendations</div>
+          <div>✓ Project, hackathon & company matching</div>
+        </div>
+      </div>
+      <div class="auth-card">
+        <div class="tabs">
+          <button class="tab active" data-tab="login">Login</button>
+          <button class="tab" data-tab="register">Create account</button>
+        </div>
+        <form id="loginForm" class="auth-form">
+          <h2>Welcome back</h2><p class="muted">Sign in to open your career dashboard.</p>
+          <label>Email<input id="loginEmail" type="email" required placeholder="you@example.com"></label>
+          <label>Password<input id="loginPassword" type="password" required placeholder="••••••••"></label>
+          <button class="primary full" type="submit">Sign in <span>→</span></button>
+        </form>
+        <form id="registerForm" class="auth-form hidden">
+          <h2>Build your profile</h2><p class="muted">Start with the essentials. You can add more later.</p>
+          <label>Full name<input id="regName" required placeholder="Your name"></label>
+          <label>Email<input id="regEmail" type="email" required placeholder="you@example.com"></label>
+          <label>Password<input id="regPassword" type="password" minlength="8" required placeholder="At least 6 characters"></label>
+          <button class="primary full" type="submit">Create account <span>→</span></button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section id="appView" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="side-brand"><div class="logo-mark">CA</div><div><strong>CareerAI</strong><small>Career intelligence</small></div></div>
+      <nav>
+        <button class="nav-item active" data-section="overview">⌂ <span>Overview</span></button>
+        <button class="nav-item" data-section="profile">◎ <span>Profile</span></button>
+        <button class="nav-item" data-section="learning">◈ <span>Learning</span></button>
+        <button class="nav-item" data-section="projects">▣ <span>Projects</span></button>
+        <button class="nav-item" data-section="opportunities">✦ <span>Opportunities</span></button>
+        <button class="nav-item" data-section="resume">▤ <span>Resume Analyzer</span></button>
+        <button class="nav-item" data-section="progress">◔ <span>Progress</span></button>
+        <button class="nav-item" data-section="settings">⚙ <span>Settings</span></button>
+        <button class="nav-item" data-section="action">✓ <span>Weekly plan</span></button>
+        <button class="nav-item" data-section="mentor">✧ <span>AI Mentor</span></button>
+      </nav>
+      <div class="side-bottom"><div class="security-note">🔒 Your dashboard is protected by JWT authentication.</div><button id="logoutBtn" class="logout">Log out</button></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div><div class="crumb">CareerAI / <span id="sectionName">Overview</span></div><h1 id="pageTitle">Career dashboard</h1></div>
+        <div class="top-actions"><button id="refreshBtn" class="ghost">↻ Refresh</button><div class="avatar" id="avatar">CA</div></div>
+      </header>
+
+      <div id="loading" class="loading hidden"><div class="spinner"></div><span>AI is preparing your career intelligence…</span></div>
+
+      <section id="overview" class="page-section">
+        <div class="welcome-row"><div><span class="eyebrow">PERSONALIZED FOR YOU</span><h2 id="welcomeTitle">Welcome back</h2><p id="welcomeSub" class="muted"></p></div><button id="recomputeBtn" class="primary">↗ Recompute insights</button></div>
+        <div class="score-grid">
+          <div class="score-card featured"><div class="card-label">Career readiness</div><div class="score-line"><span id="overallScore">—</span><small>/100</small></div><div class="progress"><i id="overallBar"></i></div><p id="analysisSummary">Loading your readiness analysis…</p></div>
+          <div class="metric-card"><span>Skills</span><strong id="skillsCount">0</strong><small>profile signals</small></div>
+          <div class="metric-card"><span>Projects</span><strong id="projectsCount">0</strong><small>portfolio evidence</small></div>
+          <div class="metric-card"><span>Certifications</span><strong id="certsCount">0</strong><small>credentials</small></div>
+        </div>
+        <div class="two-col">
+          <div class="panel"><div class="panel-head"><div><span class="eyebrow">AI ANALYSIS</span><h3>Readiness breakdown</h3></div></div><div id="breakdown" class="breakdown"></div></div>
+          <div class="panel"><div class="panel-head"><div><span class="eyebrow">NEXT MOVES</span><h3>Skill gaps</h3></div></div><div id="gaps" class="tag-list"></div></div>
+        </div>
+        <div class="panel"><div class="panel-head"><div><span class="eyebrow">ROADMAP</span><h3>Your recommended path</h3></div></div><div id="roadmap" class="roadmap"></div></div>
+      </section>
+
+      <section id="profile" class="page-section hidden">
+  <div class="section-intro"><span class="eyebrow">STUDENT PROFILE</span><h2>Build your CareerAI profile</h2><p>Enter your real academic, technical and career information. CareerAI uses this evidence to generate your score and recommendations.</p></div>
+  <div id="profileStatus" class="profile-status"></div>
+  <div class="profile-layout">
+    <div class="profile-main">
+      <form id="studentProfileForm" class="form-card">
+        <div class="form-card-head"><div><span class="eyebrow">STEP 1</span><h3>Personal, academic & career details</h3></div><span class="completion-badge" id="baseCompletion">0%</span></div>
+        <div class="form-grid">
+          <label>College / University<input id="pCollege" placeholder="e.g. ABC Institute of Technology"></label>
+          <label>Degree<input id="pDegree" placeholder="e.g. B.Tech / BCA / MCA"></label>
+          <label>Branch / Specialization<input id="pBranch" placeholder="e.g. Computer Science"></label>
+          <label>Current year<input id="pYear" type="number" min="1" max="8" placeholder="e.g. 3"></label>
+          <label>Semester<input id="pSemester" type="number" min="1" max="8" placeholder="Select degree first"><small id="semesterHint" class="muted">Semester limit is based on your program type.</small></label>
+          <label>Location<input id="pLocation" placeholder="e.g. Kanpur, India"></label>
+          <label>CGPA<input id="pCgpa" type="number" min="0" max="10" step="0.01" placeholder="0 - 10"></label>
+          <label>Class 10 %<input id="pTenth" type="number" min="0" max="100" step="0.1" placeholder="e.g. 85"></label>
+          <label>Class 12 %<input id="pTwelfth" type="number" min="0" max="100" step="0.1" placeholder="e.g. 82"></label>
+          <label>Backlogs<input id="pBacklogs" type="number" min="0" step="1" placeholder="0"></label>
+          <label>Target role<select id="pRole"><option value="">Select target role</option><option>AI/ML Engineer</option><option>Data Analyst</option><option>Data Scientist</option><option>Python Developer</option><option>Backend Developer</option><option>Full Stack Developer</option><option>Software Engineer</option><option>Cloud Engineer</option><option>Cybersecurity Analyst</option><option>Other</option></select></label>
+          <label class="full-span">Career goal<textarea id="pGoal" rows="3" placeholder="Describe the role, industry or skills you want to reach in the next 1–2 years."></textarea></label>
+        </div>
+        <button class="primary" type="submit">Save profile & update AI insights →</button>
+      </form>
+
+      <div class="form-card">
+        <div class="form-card-head"><div><span class="eyebrow">STEP 2</span><h3>Technical skills</h3><p class="muted">Add skills with your current level.</p></div></div>
+        <form id="skillForm" class="inline-form">
+          <input id="skillName" required placeholder="Skill e.g. Python">
+          <select id="skillLevel"><option>Beginner</option><option selected>Intermediate</option><option>Advanced</option></select>
+          <input id="skillScore" type="number" min="0" max="10" step="0.1" placeholder="Score /10 (optional)">
+          <button class="primary" type="submit">+ Add skill</button>
+        </form>
+        <div id="skillList" class="chip-list"></div>
+      </div>
+
+      <div class="form-card">
+        <div class="form-card-head"><div><span class="eyebrow">STEP 3</span><h3>Projects</h3><p class="muted">Show the work that proves your skills.</p></div></div>
+        <form id="projectForm" class="form-grid">
+          <label>Project name<input id="projectName" required placeholder="e.g. Student Performance Analyzer"></label>
+          <label>Technologies<input id="projectTech" placeholder="Python, FastAPI, SQL, ML"></label>
+          <label class="full-span">Description<textarea id="projectDescription" rows="3" required placeholder="What did you build and what problem did it solve?"></textarea></label>
+          <label>GitHub URL<input id="projectGithub" type="url" placeholder="https://github.com/..."></label>
+          <label>Live/demo URL<input id="projectLive" type="url" placeholder="https://..."></label>
+          <div class="full-span"><button class="primary" type="submit">+ Add project</button></div>
+        </form>
+        <div id="projectList" class="mini-list"></div>
+      </div>
+
+      <div class="form-card">
+        <div class="form-card-head"><div><span class="eyebrow">STEP 4</span><h3>Coding / DSA progress</h3></div></div>
+        <form id="codingForm" class="form-grid">
+          <label>Platform<input id="codingPlatform" placeholder="HackerRank / LeetCode / CodeChef"></label>
+          <label>Total problems solved<input id="codingProblems" type="number" min="0" placeholder="e.g. 120"></label>
+          <label>Easy<input id="codingEasy" type="number" min="0" placeholder="0"></label>
+          <label>Medium<input id="codingMedium" type="number" min="0" placeholder="0"></label>
+          <label>Hard<input id="codingHard" type="number" min="0" placeholder="0"></label>
+          <label>Contest rating<input id="codingRating" type="number" min="0" placeholder="Optional"></label>
+          <div class="full-span"><button class="primary" type="submit">+ Save coding progress</button></div>
+        </form>
+        <div id="codingList" class="mini-list"></div>
+      </div>
+
+      <div class="form-card two-form-cols">
+        <div><div class="form-card-head"><div><span class="eyebrow">STEP 5</span><h3>Certifications</h3></div></div>
+          <form id="certForm" class="stack-form">
+            <input id="certName" required placeholder="Certification name">
+            <input id="certPlatform" placeholder="Platform e.g. Coursera">
+            <input id="certIssuer" placeholder="Issuer">
+            <input id="certUrl" type="url" placeholder="Credential URL (optional)">
+            <button class="primary" type="submit">+ Add certification</button>
+          </form><div id="certList" class="mini-list"></div>
+        </div>
+        <div><div class="form-card-head"><div><span class="eyebrow">STEP 6</span><h3>Academic record</h3></div></div>
+          <form id="academicForm" class="stack-form">
+            <input id="academicTerm" required placeholder="Term e.g. Semester 5">
+            <input id="academicCgpa" type="number" min="0" max="10" step="0.01" placeholder="Term CGPA">
+            <input id="academicAttendance" type="number" min="0" max="100" step="0.1" placeholder="Attendance %">
+            <input id="academicBacklogs" type="number" min="0" placeholder="Backlogs">
+            <button class="primary" type="submit">+ Add academic record</button>
+          </form><div id="academicList" class="mini-list"></div>
+        </div>
+      </div>
+
+      <div class="form-card">
+        <div class="form-card-head"><div><span class="eyebrow">STEP 7</span><h3>Recent performance</h3><p class="muted">Add assessment, internship, project or interview performance signals.</p></div></div>
+        <form id="performanceForm" class="inline-form">
+          <input id="performanceCategory" required placeholder="Category e.g. Python assessment">
+          <input id="performanceScore" required type="number" min="0" max="10" step="0.1" placeholder="Score /10">
+          <input id="performanceNote" placeholder="Short note">
+          <button class="primary" type="submit">+ Add performance</button>
+        </form>
+        <div id="performanceList" class="mini-list"></div>
+      </div>
+    </div>
+    <aside class="profile-side">
+      <div class="panel sticky-card"><span class="eyebrow">AI READINESS INPUTS</span><h3>Profile completeness</h3><div class="completion-ring"><strong id="profilePercent">0%</strong><span>complete</span></div><div id="profileChecklist" class="checklist"></div><button id="analyzeFromProfile" class="primary full">Analyze my career readiness →</button></div>
+      <div class="panel"><span class="eyebrow">WHY THIS MATTERS</span><h3>More evidence = better recommendations</h3><p class="muted">CareerAI can only personalize your roadmap when you provide enough evidence about your academics, skills, projects, coding and goals.</p></div>
+    </aside>
+  </div>
+</section>
+      <section id="learning" class="page-section hidden"><div class="section-intro"><span class="eyebrow">LEARNING ENGINE</span><h2>What to learn next</h2><p>Finish a task, open its learning platform, mark it complete, and CareerAI will move the next task into your queue.</p></div><div id="learningGrid" class="cards-grid"></div></section>
+      <section id="projects" class="page-section hidden"><div class="section-intro"><span class="eyebrow">PROJECT ENGINE</span><h2>Projects that strengthen your profile</h2><p>CareerAI gives you multiple projects. Build one, upload your proof, tick it complete, and your next project becomes available.</p></div><div id="projectGrid" class="cards-grid"></div></section>
+      <section id="opportunities" class="page-section hidden"><div class="section-intro"><span class="eyebrow">OPPORTUNITY MATCHING</span><h2>Hackathons & company matches</h2><p>CareerAI shows where to search, including startups, small companies and growing employers — not only MNCs.</p></div><h3 class="subhead">Company / job matches</h3><div id="jobGrid" class="cards-grid"></div><h3 class="subhead">Hackathon matches</h3><div id="hackGrid" class="cards-grid"></div></section>
+      <section id="resume" class="page-section hidden"><div class="section-intro"><span class="eyebrow">RESUME INTELLIGENCE</span><h2>Analyze your resume</h2><p>Upload a PDF, DOCX or TXT resume. CareerAI checks role-relevant keywords, common sections and improvement opportunities. The score is an AI-style estimate, not a hiring decision.</p></div><div class="two-col"><div class="form-card"><form id="resumeForm" class="stack-form"><label>Target role<input id="resumeRole" placeholder="e.g. Software Engineer"></label><label>Resume file<input id="resumeFile" type="file" accept=".pdf,.docx,.txt" required></label><button class="primary" type="submit">Analyze resume →</button></form></div><div class="panel"><span class="eyebrow">LATEST RESULT</span><div id="resumeResult"><p class="muted">Upload a resume to see your analysis.</p></div></div></div><div class="panel"><div class="panel-head"><div><span class="eyebrow">HISTORY</span><h3>Recent resume analyses</h3></div></div><div id="resumeHistory" class="mini-list"></div></div></section>
+<section id="progress" class="page-section hidden"><div class="section-intro"><span class="eyebrow">GROWTH TRACKING</span><h2>Your progress</h2><p>Track the evidence CareerAI currently has for your career journey.</p></div><div class="score-grid"><div class="metric-card"><span>Profile completeness</span><strong id="progressProfile">0%</strong><small>data coverage</small></div><div class="metric-card"><span>Career readiness</span><strong id="progressScore">—</strong><small>AI estimate</small></div><div class="metric-card"><span>Coding problems</span><strong id="progressCoding">0</strong><small>recorded</small></div><div class="metric-card"><span>Projects</span><strong id="progressProjects">0</strong><small>portfolio evidence</small></div></div><div class="panel"><div class="panel-head"><div><span class="eyebrow">CURRENT EVIDENCE</span><h3>What CareerAI knows about you</h3></div></div><div id="progressEvidence" class="checklist"></div></div></section>
+<section id="settings" class="page-section hidden"><div class="section-intro"><span class="eyebrow">ACCOUNT & PRIVACY</span><h2>Settings</h2><p>Manage your account and understand how CareerAI uses your profile data.</p></div><div class="two-col"><div class="panel"><span class="eyebrow">PRIVACY</span><h3>Your data</h3><p class="muted">Your student routes require authentication and are ownership-checked. Recommendations are generated from the profile data you provide. Live opportunity cards must be verified against official sources before applying.</p></div><div class="panel danger-panel"><span class="eyebrow">DANGER ZONE</span><h3>Delete account</h3><p class="muted">This permanently removes your profile, skills, projects, certifications, academic records, performance records, tasks and saved resume analyses.</p><button id="deleteAccountBtn" class="danger">Delete my account</button></div></div></section>
+<section id="action" class="page-section hidden"><div class="section-intro"><span class="eyebrow">WEEKLY EXECUTION</span><h2>Your action plan</h2><p>Small, prioritized actions designed to improve your readiness.</p></div><div id="actionSummary" class="action-summary"></div><div id="taskList" class="task-list"></div></section>
+      <section id="mentor" class="page-section hidden"><div class="section-intro"><span class="eyebrow">AI MENTOR</span><h2>Ask CareerAI</h2><p>Get guidance grounded in your current student profile.</p></div><div class="mentor-box"><div id="chatMessages" class="chat-messages"><div class="chat ai"><div class="chat-avatar">CA</div><div>Hi! I’m your CareerAI mentor. Ask me what you should focus on next, how to improve your profile, or how to prepare for your target role.</div></div></div><form id="mentorForm" class="chat-form"><input id="mentorInput" required placeholder="e.g. What should I improve this week?"><button class="primary" type="submit">Ask AI</button></form></div></section>
+    </main>
+  </section>
+  <script src="app.js"></script>
+</body>
+</html>
